@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a16">
+  <title>Minecraft-Server</title>
+  <style>
+    :root{--bg:#101a16;--panel:#192720;--panel2:#21352a;--text:#f1f6ef;--muted:#b5c5b8;--green:#68dc83;--red:#ff6868;--gold:#e9c66b}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#263d2e 0,#101a16 55%);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+    .wrap{width:min(100% - 32px,1000px);margin:auto}.hero{text-align:center;padding:64px 0 34px}
+    .logo{font-size:54px;filter:drop-shadow(0 8px 15px #0008)}h1{font-size:clamp(2rem,6vw,3.6rem);line-height:1.08;margin:12px 0;color:#a9ef9e;text-shadow:0 3px 0 #31543a}
+    .subtitle{color:var(--muted);margin:10px auto 0;max-width:600px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:20px 0}
+    .card{background:linear-gradient(145deg,#203329,#17241d);border:1px solid #ffffff18;border-radius:18px;padding:22px;box-shadow:0 12px 35px #0003}
+    .card h2{margin:0 0 14px;font-size:1.2rem}.serverline{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:600}
+    .dot{width:11px;height:11px;border-radius:50%;background:#888;box-shadow:0 0 12px currentColor}.dot.online{background:var(--green);color:var(--green)}.dot.offline{background:var(--red);color:var(--red)}
+    .address{display:flex;gap:8px;align-items:center;margin-top:12px;background:#0d1712;padding:12px;border-radius:12px;min-width:0}
+    .address code{font-size:1rem;overflow-wrap:anywhere;flex:1;color:#d9f6d3}.copy{border:0;border-radius:9px;padding:9px 12px;background:#a9ef9e;color:#142018;font-weight:800;cursor:pointer}.copy:hover{filter:brightness(1.08)}
+    .muted{color:var(--muted);font-size:.9rem}.description{white-space:pre-wrap;color:#e0e9df}
+    .rating{display:flex;gap:12px}.rate{flex:1;border:1px solid #ffffff24;background:#0d1712;color:var(--text);border-radius:12px;padding:12px;cursor:pointer;font-size:1rem}.rate.selected{border-color:var(--gold);background:#4b4022}
+    .section{margin:18px 0}.field{display:grid;gap:6px;margin:12px 0}.field input,.field textarea{width:100%;border:1px solid #ffffff28;border-radius:10px;background:#0d1712;color:var(--text);padding:11px;font:inherit}.field textarea{min-height:100px;resize:vertical}
+    .primary{background:#a9ef9e;color:#142018;border:0;border-radius:10px;padding:11px 16px;font-weight:800;cursor:pointer}.comment{border-top:1px solid #ffffff18;padding:14px 0}.comment strong{color:#b7f4a9}.comment p{margin:5px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+    .admin{margin:26px 0 40px}.admin summary{cursor:pointer;color:var(--muted)}.notice{font-size:.88rem;color:var(--muted);margin-top:12px}.hidden{display:none!important}
+    footer{text-align:center;color:#91a398;padding:20px 0 36px;font-size:.85rem}
+    @media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:42px}.address{align-items:stretch;flex-direction:column}.copy{width:100%}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <div class="logo" aria-hidden="true">⛏️</div>
+      <h1 id="serverTitle">Mein Minecraft-Server</h1>
+      <p class="subtitle" id="tagline">Willkommen auf unserem Server! Schau vorbei und spiel mit.</p>
+    </header>
+
+    <section class="grid" aria-label="Server-Informationen">
+      <article class="card">
+        <h2>🟢 Serverstatus</h2>
+        <div class="serverline"><span class="dot" id="statusDot"></span><span id="statusText">Status wird geprüft …</span></div>
+        <p class="muted" id="players">Spieler: —</p>
+        <p class="muted" id="checkedAt">Noch keine Statusabfrage</p>
+      </article>
+      <article class="card">
+        <h2>🔗 Server-Adresse</h2>
+        <div class="muted">IP-Adresse</div>
+        <div class="address"><code id="serverIp">DEINE-SERVER-ADRESSE</code><button class="copy" data-copy="ip">IP kopieren</button></div>
+        <div class="muted" style="margin-top:12px">Port</div>
+        <div class="address"><code id="serverPort">25565</code><button class="copy" data-copy="port">Port kopieren</button></div>
+      </article>
+      <article class="card">
+        <h2>📜 Über den Server</h2>
+        <div class="description" id="serverDescription">Hier steht die Beschreibung deines Minecraft-Servers. Du kannst sie im Admin-Bereich anpassen.</div>
+      </article>
+      <article class="card">
+        <h2>⭐ Bewerte den Server</h2>
+        <p class="muted">Gefällt dir der Server?</p>
+        <div class="rating">
+          <button class="rate" id="likeBtn">👍 <span id="likes">0</span></button>
+          <button class="rate" id="dislikeBtn">👎 <span id="dislikes">0</span></button>
+        </div>
+        <p class="notice">Bewertungen werden in diesem Browser gespeichert und nicht zwischen Besuchern geteilt.</p>
+      </article>
+    </section>
+
+    <section class="card section">
+      <h2>💬 Kommentare</h2>
+      <p class="muted">Schreib einen netten Kommentar zum Server.</p>
+      <form id="commentForm">
+        <div class="field"><label for="commentName">Dein Name</label><input id="commentName" maxlength="30" required placeholder="Minecraft-Spieler"></div>
+        <div class="field"><label for="commentText">Dein Kommentar</label><textarea id="commentText" maxlength="500" required placeholder="Wie findest du den Server?"></textarea></div>
+        <button class="primary" type="submit">Kommentar speichern</button>
+      </form>
+      <div id="comments"><p class="muted">Noch keine Kommentare.</p></div>
+      <p class="notice">Hinweis: In dieser einfachen GitHub-Pages-Version sind Kommentare nur im Browser des jeweiligen Besuchers sichtbar. Für gemeinsame Kommentare aller Besucher muss unten Giscus eingerichtet werden (kostenlos über GitHub Discussions).</p>
+    </section>
+
+    <details class="card admin">
+      <summary>🔒 Admin-Bereich – Serverdaten ändern</summary>
+      <div id="adminLogin">
+        <div class="field"><label for="adminPassword">Admin-Passwort</label><input id="adminPassword" type="password" placeholder="Passwort"></div>
+        <button class="primary" id="loginBtn" type="button">Anmelden</button>
+        <p class="notice" id="loginMessage"></p>
+      </div>
+      <div id="adminEditor" class="hidden">
+        <div class="field"><label for="editTitle">Servername</label><input id="editTitle"></div>
+        <div class="field"><label for="editTagline">Untertitel</label><input id="editTagline"></div>
+        <div class="field"><label for="editIp">Server-IP / Hostname</label><input id="editIp"></div>
+        <div class="field"><label for="editPort">Port</label><input id="editPort" inputmode="numeric"></div>
+        <div class="field"><label for="editDescription">Beschreibung</label><textarea id="editDescription"></textarea></div>
+        <button class="primary" id="saveBtn" type="button">Änderungen speichern</button>
+        <p class="notice">Änderungen werden nur in diesem Browser gespeichert. Für alle Besucher dauerhaft sichtbar: Werte in der Datei <code>config.js</code> ändern und erneut zu GitHub hochladen.</p>
+      </div>
+    </details>
+    <footer>Eine kleine Website für deinen Minecraft-Server · Mit ❤️ gebaut</footer>
+  </main>
+<script src="config.js"></script>
+<script>
+(() => {
+  const defaults = window.SERVER_CONFIG || {};
+  const cfg = {...defaults};
+  const $ = id => document.getElementById(id);
+  const getSaved = (key, fallback) => { try { const v=localStorage.getItem(key); return v===null?fallback:JSON.parse(v); } catch { return fallback; } };
+  const setSaved = (key, value) => localStorage.setItem(key, JSON.stringify(value));
+  let current = {...cfg, ...getSaved('mcSiteSettings', {})};
+  const host = () => String(current.ip || '').trim();
+  const port = () => String(current.port || '25565').trim();
+  function render(){
+    $('serverTitle').textContent=current.title||'Mein Minecraft-Server';
+    $('tagline').textContent=current.tagline||'Willkommen auf unserem Server!';
+    $('serverIp').textContent=host()||'DEINE-SERVER-ADRESSE';
+    $('serverPort').textContent=port();
+    $('serverDescription').textContent=current.description||'Noch keine Beschreibung vorhanden.';
+  }
+  render();
+  document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click', async()=>{
+    const value=btn.dataset.copy==='ip'?host():port();
+    try { await navigator.clipboard.writeText(value); btn.textContent='Kopiert!'; }
+    catch { btn.textContent='Kopieren nicht möglich'; }
+    setTimeout(()=>btn.textContent=btn.dataset.copy==='ip'?'IP kopieren':'Port kopieren',1600);
+  }));
+
+  async function checkStatus(){
+    const h=host();
+    if(!h || h.includes('DEINE-') || h===''){
+      $('statusText').textContent='Server-Adresse noch nicht eingerichtet';
+      $('statusDot').className='dot'; $('players').textContent='Spieler: —'; return;
+    }
+    $('statusText').textContent='Status wird geprüft …';
+    try{
+      const response=await fetch(`https://api.mcsrvstat.us/3/${encodeURIComponent(h)}:${encodeURIComponent(port())}`);
+      if(!response.ok) throw new Error('Statusdienst nicht erreichbar');
+      const data=await response.json();
+      const online=!!data.online;
+      $('statusDot').className='dot '+(online?'online':'offline');
+      $('statusText').textContent=online?'Online':'Offline';
+      $('players').textContent=online?`Spieler: ${data.players?.online ?? 0} / ${data.players?.max ?? '?'}${data.version?' · '+data.version:''}`:'Spieler: —';
+      $('checkedAt').textContent='Zuletzt geprüft: '+new Date().toLocaleTimeString('de-DE');
+    }catch(e){
+      $('statusDot').className='dot'; $('statusText').textContent='Status momentan nicht abrufbar';
+      $('players').textContent='Bitte später erneut versuchen.';
+    }
+  }
+  checkStatus(); setInterval(checkStatus,60000);
+
+  const initialComments=getSaved('mcSiteComments',[]);
+  function renderComments(){
+    const area=$('comments'); area.innerHTML='';
+    const comments=getSaved('mcSiteComments',[]);
+    if(!comments.length){area.innerHTML='<p class="muted">Noch keine Kommentare.</p>';return;}
+    comments.slice().reverse().forEach(c=>{
+      const item=document.createElement('div'); item.className='comment';
+      const name=document.createElement('strong'); name.textContent=c.name;
+      const date=document.createElement('span'); date.className='muted'; date.textContent=' · '+c.date;
+      const body=document.createElement('p'); body.textContent=c.text;
+      item.append(name,date,body); area.append(item);
+    });
+  }
+  renderComments();
+  $('commentForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=$('commentName').value.trim(), text=$('commentText').value.trim();
+    if(!name||!text)return;
+    const comments=getSaved('mcSiteComments',[]);
+    comments.push({name,text,date:new Date().toLocaleString('de-DE')});
+    setSaved('mcSiteComments',comments); $('commentText').value=''; renderComments();
+  });
+
+  function renderRatings(){
+    const r=getSaved('mcSiteRatings',{likes:0,dislikes:0,mine:''});
+    $('likes').textContent=r.likes; $('dislikes').textContent=r.dislikes;
+    $('likeBtn').classList.toggle('selected',r.mine==='like');
+    $('dislikeBtn').classList.toggle('selected',r.mine==='dislike');
+  }
+  function vote(kind){
+    const r=getSaved('mcSiteRatings',{likes:0,dislikes:0,mine:''});
+    if(r.mine===kind)return;
+    if(r.mine==='like')r.likes=Math.max(0,r.likes-1);
+    if(r.mine==='dislike')r.dislikes=Math.max(0,r.dislikes-1);
+    r[kind==='like'?'likes':'dislikes']++;r.mine=kind;setSaved('mcSiteRatings',r);renderRatings();
+  }
+  $('likeBtn').addEventListener('click',()=>vote('like'));
+  $('dislikeBtn').addEventListener('click',()=>vote('dislike')); renderRatings();
+
+  // Simple convenience lock only: static website passwords are visible in source code.
+  $('loginBtn').addEventListener('click',()=>{
+    if($('adminPassword').value===(current.adminPassword||'minecraft123')){
+      $('adminLogin').classList.add('hidden');$('adminEditor').classList.remove('hidden');
+      $('editTitle').value=current.title||'';$('editTagline').value=current.tagline||'';
+      $('editIp').value=current.ip||'';$('editPort').value=current.port||'25565';
+      $('editDescription').value=current.description||'';
+    }else $('loginMessage').textContent='Passwort ist falsch.';
+  });
+  $('saveBtn').addEventListener('click',()=>{
+    current={...current,title:$('editTitle').value,tagline:$('editTagline').value,ip:$('editIp').value,port:$('editPort').value,description:$('editDescription').value};
+    setSaved('mcSiteSettings',current);render();checkStatus();alert('Gespeichert – nur in diesem Browser.');
+  });
+})();
+</script>
+</body>
+</html>
