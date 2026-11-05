@@ -1,11 +1,22 @@
-// HIER deine Serverdaten eintragen, danach alle Dateien zu GitHub hochladen.
+
 window.SERVER_CONFIG = {
   title: "Mein Minecraft-Server",
   tagline: "Willkommen auf unserem Server! Schau vorbei und spiel mit.",
-  ip: "DEINE-SERVER-ADRESSE",
+
+  // JAVA EDITION
+  javaIP: "DEINE-JAVA-SERVER-IP",
+  javaPort: "25565",
+
+  // BEDROCK EDITION
+  bedrockIP: "DEINE-BEDROCK-SERVER-IP",
+  bedrockPort: "19132",
+
+  // Kompatibilität mit der bisherigen Website
+  ip: "DEINE-JAVA-SERVER-IP",
   port: "25565",
-  description: "Schreibe hier, was es auf deinem Server gibt.",
-  // WICHTIG: Das ist bei einer statischen Website KEIN sicheres Passwort.
-  // Jeder kann es im Quelltext sehen. Nicht für wichtige Konten verwenden.
-  adminPassword: "minecraft123"
+
+  description: "Eine Stadt mit eigenen Grundstücken und Bauwerken.",
+
+  // Nur für eine einfache lokale Demo verwenden!
+  adminPassword: ""
 };
