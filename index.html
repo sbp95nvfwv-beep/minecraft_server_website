@@ -1,8 +1,7 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101a16">
   <meta name="description" content="Informationen, Serverstatus und Community für unseren Minecraft-Server.">
@@ -10,611 +9,355 @@
 
   <style>
     :root {
-      --bg:#101a16;
-      --panel:#192720;
-      --panel2:#21352a;
-      --text:#f1f6ef;
-      --muted:#b5c5b8;
-      --green:#68dc83;
-      --red:#ff6868;
-      --gold:#e9c66b;
+      --bg: #101a16;
+      --panel: #192720;
+      --panel2: #20332a;
+      --text: #f3f7f4;
+      --muted: #a8b8ae;
+      --green: #52dc91;
+      --red: #ff6262;
+      --yellow: #f4c95d;
+      --border: rgba(255,255,255,.09);
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
-      margin:0;
-      background:radial-gradient(ellipse at top,#263d2e 0,#101a16 55%);
-      color:var(--text);
-      font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif;
-      min-height:100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, #244b35 0, transparent 40%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    .wrap {
-      width:min(100% - 32px,1000px);
-      margin:auto;
+    header {
+      padding: 28px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,20,15,.7);
+      text-align: center;
     }
 
-    .hero {
-      text-align:center;
-      padding:64px 0 34px;
+    header h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 44px);
     }
 
-    .logo {
-      font-size:54px;
-      filter:drop-shadow(0 8px 15px #0008);
+    header p {
+      color: var(--muted);
+      margin-bottom: 0;
     }
 
-    h1 {
-      font-size:clamp(2rem,6vw,3.6rem);
-      line-height:1.08;
-      margin:12px 0;
-      color:#a9ef9e;
-      text-shadow:0 3px 0 #31543a;
-    }
-
-    .subtitle {
-      color:var(--muted);
-      margin:10px auto 0;
-      max-width:600px;
-    }
-
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-      margin:20px 0;
+    main {
+      width: min(950px, 92%);
+      margin: 35px auto;
     }
 
     .card {
-      background:linear-gradient(145deg,#203329,#17241d);
-      border:1px solid #ffffff18;
-      border-radius:18px;
-      padding:22px;
-      box-shadow:0 12px 35px #0003;
+      background: rgba(25,39,32,.94);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.2);
     }
 
-    .card h2 {
-      margin:0 0 14px;
-      font-size:1.2rem;
+    h2 {
+      margin-top: 0;
     }
 
-    .serverline {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color:var(--muted);
-      font-weight:600;
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: bold;
     }
 
     .dot {
-      width:11px;
-      height:11px;
-      border-radius:50%;
-      background:#888;
-      box-shadow:0 0 12px currentColor;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--yellow);
+      box-shadow: 0 0 12px currentColor;
     }
 
     .dot.online {
-      background:var(--green);
-      color:var(--green);
+      background: var(--green);
+      color: var(--green);
     }
 
     .dot.offline {
-      background:var(--red);
-      color:var(--red);
+      background: var(--red);
+      color: var(--red);
     }
 
-    .address {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      margin-top:12px;
-      background:#0d1712;
-      padding:12px;
-      border-radius:12px;
-      min-width:0;
+    .dot.unknown {
+      background: var(--yellow);
+      color: var(--yellow);
     }
 
-    .address code {
-      font-size:1rem;
-      overflow-wrap:anywhere;
-      flex:1;
-      color:#d9f6d3;
+    .server-address {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      padding: 14px;
+      background: var(--panel2);
+      border-radius: 12px;
     }
 
-    .copy,.primary {
-      border:0;
-      border-radius:10px;
-      padding:11px 16px;
-      background:#a9ef9e;
-      color:#142018;
-      font-weight:800;
-      cursor:pointer;
+    .server-address code {
+      font-size: 16px;
+      overflow-wrap: anywhere;
+      flex: 1;
     }
 
-    .copy:hover,.primary:hover {
-      filter:brightness(1.08);
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      color: #07150d;
+      background: var(--green);
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      filter: brightness(1.1);
     }
 
     .muted {
-      color:var(--muted);
-      font-size:.9rem;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
-    .description {
-      white-space:pre-wrap;
-      color:#e0e9df;
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
     }
 
-    .rating {
-      display:flex;
-      gap:12px;
+    .info {
+      padding: 16px;
+      background: var(--panel2);
+      border-radius: 12px;
     }
 
-    .rate {
-      flex:1;
-      border:1px solid #ffffff24;
-      background:#0d1712;
-      color:var(--text);
-      border-radius:12px;
-      padding:12px;
-      cursor:pointer;
-      font-size:1rem;
-    }
-
-    .rate.selected {
-      border-color:var(--gold);
-      background:#4b4022;
-    }
-
-    .section {
-      margin:18px 0;
-    }
-
-    .notice {
-      font-size:.88rem;
-      color:var(--muted);
-      margin-top:12px;
-    }
-
-    .admin {
-      margin:26px 0 40px;
-    }
-
-    .admin summary {
-      cursor:pointer;
-      color:var(--muted);
-    }
-
-    .field {
-      display:grid;
-      gap:6px;
-      margin:12px 0;
-    }
-
-    .field input,.field textarea {
-      width:100%;
-      border:1px solid #ffffff28;
-      border-radius:10px;
-      background:#0d1712;
-      color:var(--text);
-      padding:11px;
-      font:inherit;
-    }
-
-    .field textarea {
-      min-height:100px;
-      resize:vertical;
-    }
-
-    .hidden {
-      display:none!important;
-    }
-
-    .giscus {
-      margin-top:20px;
-      width:100%;
+    .info strong {
+      display: block;
+      margin-bottom: 7px;
     }
 
     footer {
-      text-align:center;
-      color:#91a398;
-      padding:20px 0 36px;
-      font-size:.85rem;
-    }
-
-    @media(max-width:680px) {
-      .grid {
-        grid-template-columns:1fr;
-      }
-
-      .hero {
-        padding-top:42px;
-      }
-
-      .address {
-        align-items:stretch;
-        flex-direction:column;
-      }
-
-      .copy {
-        width:100%;
-      }
+      text-align: center;
+      color: var(--muted);
+      padding: 25px;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
-<main class="wrap">
 
-  <header class="hero">
-    <div class="logo" aria-hidden="true">⛏️</div>
-    <h1 id="serverTitle">Mein Minecraft-Server</h1>
-    <p class="subtitle" id="tagline">
-      Willkommen auf unserem Server! Schau vorbei und spiel mit.
+<header>
+  <h1 id="serverTitle">Mein Minecraft-Server</h1>
+  <p id="serverTagline">Willkommen auf unserem Server!</p>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>Serverstatus</h2>
+
+    <div class="status">
+      <span class="dot unknown" id="statusDot"></span>
+      <span id="statusText">Status wird geprüft …</span>
+    </div>
+
+    <p class="muted" id="statusDetails">
+      Verbindung zum Minecraft-Server wird überprüft.
     </p>
-  </header>
 
-  <section class="grid" aria-label="Server-Informationen">
-
-    <article class="card">
-      <h2>🟢 Serverstatus</h2>
-      <div class="serverline">
-        <span class="dot" id="statusDot"></span>
-        <span id="statusText">Status wird geprüft …</span>
-      </div>
-      <p class="muted" id="players">Spieler: —</p>
-      <p class="muted" id="checkedAt">Noch keine Statusabfrage</p>
-    </article>
-
-    <article class="card">
-      <h2>🔗 Server-Adresse</h2>
-      <div class="muted">IP-Adresse</div>
-      <div class="address">
-        <code id="serverIp">DEINE-SERVER-ADRESSE</code>
-        <button class="copy" data-copy="ip">IP kopieren</button>
+    <div class="info-grid">
+      <div class="info">
+        <strong>Spieler online</strong>
+        <span id="playersOnline">–</span>
       </div>
 
-      <div class="muted" style="margin-top:12px">Port</div>
-      <div class="address">
-        <code id="serverPort">25565</code>
-        <button class="copy" data-copy="port">Port kopieren</button>
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>📜 Über den Server</h2>
-      <div class="description" id="serverDescription">
-        Hier steht die Beschreibung deines Minecraft-Servers.
-        Du kannst sie im Admin-Bereich anpassen.
-      </div>
-    </article>
-
-    <article class="card">
-      <h2>⭐ Bewerte den Server</h2>
-      <p class="muted">Gefällt dir der Server?</p>
-
-      <div class="rating">
-        <button class="rate" id="likeBtn">
-          👍 <span id="likes">0</span>
-        </button>
-
-        <button class="rate" id="dislikeBtn">
-          👎 <span id="dislikes">0</span>
-        </button>
+      <div class="info">
+        <strong>Maximale Spieler</strong>
+        <span id="playersMax">–</span>
       </div>
 
-      <p class="notice">
-        Bewertungen werden in diesem Browser gespeichert
-        und nicht zwischen Besuchern geteilt.
-      </p>
-    </article>
+      <div class="info">
+        <strong>Minecraft-Version</strong>
+        <span id="serverVersion">–</span>
+      </div>
+    </div>
 
-  </section>
-
-  <!-- GEMEINSAME KOMMENTARE MIT GISCUS -->
-
-  <section class="card section">
-    <h2>💬 Community – Kommentare</h2>
+    <div class="server-address">
+      <code id="serverAddress">tayronstadt.aternos.me:62855</code>
+      <button onclick="copyAddress()">IP kopieren</button>
+    </div>
 
     <p class="muted">
-      Tausche dich mit anderen Minecraft-Spielern aus!
-      Schreibe Kommentare und reagiere auf Beiträge.
+      Letzte Prüfung: <span id="lastCheck">Noch nicht geprüft</span>
     </p>
 
-    <div class="giscus">
-      <script
-        src="https://giscus.app/client.js"
-        data-repo="sbp95nvfwv-beep/minecraft_server_website"
-        data-repo-id="R_kgDOVj_XLg"
-        data-category="General"
-        data-category-id="DIC_kwDOVj_XLs4DKc-w"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="dark_high_contrast"
-        data-lang="de"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-      </script>
-    </div>
+    <button onclick="checkStatus()">Status aktualisieren</button>
   </section>
 
-  <!-- ADMIN-BEREICH -->
+  <section class="card">
+    <h2>Über unseren Server</h2>
+    <p id="serverDescription" class="muted">
+      Eine Stadt mit eigenen Grundstücken und Bauwerken.
+      Jeder kann seine eigene Fläche gestalten und sein eigenes Bauwerk errichten.
+    </p>
+  </section>
 
-  <details class="card admin">
-    <summary>🔒 Admin-Bereich – Serverdaten ändern</summary>
+  <section class="card">
+    <h2>Server beitreten</h2>
 
-    <div id="adminLogin">
-      <div class="field">
-        <label for="adminPassword">Admin-Passwort</label>
-        <input
-          id="adminPassword"
-          type="password"
-          placeholder="Passwort">
+    <div class="info-grid">
+      <div class="info">
+        <strong>Java Edition</strong>
+        <span>tayronstadt.aternos.me</span>
+        <p class="muted">Port: 62855</p>
       </div>
 
-      <button class="primary" id="loginBtn" type="button">
-        Anmelden
-      </button>
-
-      <p class="notice" id="loginMessage"></p>
+      <div class="info">
+        <strong>Bedrock Edition</strong>
+        <span>tayronstadt.aternos.me</span>
+        <p class="muted">Bitte den tatsächlich bei Aternos eingestellten Bedrock-Port verwenden.</p>
+      </div>
     </div>
-
-    <div id="adminEditor" class="hidden">
-
-      <div class="field">
-        <label for="editTitle">Servername</label>
-        <input id="editTitle">
-      </div>
-
-      <div class="field">
-        <label for="editTagline">Untertitel</label>
-        <input id="editTagline">
-      </div>
-
-      <div class="field">
-        <label for="editIp">Server-IP / Hostname</label>
-        <input id="editIp">
-      </div>
-
-      <div class="field">
-        <label for="editPort">Port</label>
-        <input id="editPort" inputmode="numeric">
-      </div>
-
-      <div class="field">
-        <label for="editDescription">Beschreibung</label>
-        <textarea id="editDescription"></textarea>
-      </div>
-
-      <button class="primary" id="saveBtn" type="button">
-        Änderungen speichern
-      </button>
-
-      <p class="notice">
-        Änderungen werden nur in diesem Browser gespeichert.
-        Für alle Besucher dauerhaft sichtbar müssen die Werte
-        in config.js geändert und erneut hochgeladen werden.
-      </p>
-    </div>
-  </details>
-
-  <footer>
-    Eine kleine Website für deinen Minecraft-Server · Mit ❤️ gebaut
-  </footer>
+  </section>
 
 </main>
 
-<script src="config.js"></script>
+<footer>
+  Minecraft Community Server
+</footer>
 
 <script>
-(() => {
-  const defaults = window.SERVER_CONFIG || {};
-  const cfg = {...defaults};
+  const SERVER = {
+    host: "tayronstadt.aternos.me",
+    port: "62855",
+    refreshInterval: 60000
+  };
 
   const $ = id => document.getElementById(id);
 
-  const getSaved = (key, fallback) => {
-    try {
-      const v = localStorage.getItem(key);
-      return v === null ? fallback : JSON.parse(v);
-    } catch {
-      return fallback;
-    }
-  };
+  let checking = false;
 
-  const setSaved = (key, value) =>
-    localStorage.setItem(key, JSON.stringify(value));
-
-  let current = {
-    ...cfg,
-    ...getSaved('mcSiteSettings', {})
-  };
-
-  const host = () => String(current.ip || '').trim();
-  const port = () => String(current.port || '25565').trim();
-
-  function render() {
-    $('serverTitle').textContent =
-      current.title || 'Mein Minecraft-Server';
-
-    $('tagline').textContent =
-      current.tagline || 'Willkommen auf unserem Server!';
-
-    $('serverIp').textContent =
-      host() || 'DEINE-SERVER-ADRESSE';
-
-    $('serverPort').textContent = port();
-
-    $('serverDescription').textContent =
-      current.description || 'Noch keine Beschreibung vorhanden.';
+  function setStatus(state, message, details) {
+    $("statusDot").className = "dot " + state;
+    $("statusText").textContent = message;
+    $("statusDetails").textContent = details;
   }
 
-  render();
-
-  document.querySelectorAll('[data-copy]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const value = btn.dataset.copy === 'ip' ? host() : port();
-
-      try {
-        await navigator.clipboard.writeText(value);
-        btn.textContent = 'Kopiert!';
-      } catch {
-        btn.textContent = 'Kopieren nicht möglich';
-      }
-
-      setTimeout(() => {
-        btn.textContent =
-          btn.dataset.copy === 'ip' ? 'IP kopieren' : 'Port kopieren';
-      }, 1600);
-    });
-  });
-
   async function checkStatus() {
-    const h = host();
+    if (checking) return;
 
-    if (!h || h.includes('DEINE-')) {
-      $('statusText').textContent =
-        'Server-Adresse noch nicht eingerichtet';
+    checking = true;
 
-      $('statusDot').className = 'dot';
-      $('players').textContent = 'Spieler: —';
-      return;
-    }
-
-    $('statusText').textContent = 'Status wird geprüft …';
+    setStatus(
+      "unknown",
+      "Status wird geprüft …",
+      "Verbindung zum Minecraft-Server wird überprüft."
+    );
 
     try {
-      const response = await fetch(
-        `https://api.mcsrvstat.us/3/${encodeURIComponent(h)}:${encodeURIComponent(port())}`
-      );
+      const url =
+        "https://api.mcsrvstat.us/3/" +
+        encodeURIComponent(SERVER.host) +
+        ":" +
+        encodeURIComponent(SERVER.port);
+
+      const response = await fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      });
 
       if (!response.ok) {
-        throw new Error('Statusdienst nicht erreichbar');
+        throw new Error("Statusdienst antwortet nicht.");
       }
 
       const data = await response.json();
-      const online = !!data.online;
 
-      $('statusDot').className =
-        'dot ' + (online ? 'online' : 'offline');
+      if (data.online !== true) {
+        setStatus(
+          "offline",
+          "Offline",
+          "Der Minecraft-Server ist momentan nicht erreichbar oder ausgeschaltet."
+        );
 
-      $('statusText').textContent =
-        online ? 'Online' : 'Offline';
+        $("playersOnline").textContent = "0";
+        $("playersMax").textContent = "–";
+        $("serverVersion").textContent = "–";
+      } else {
+        setStatus(
+          "online",
+          "Online",
+          "Der Minecraft-Server ist erreichbar!"
+        );
 
-      $('players').textContent = online
-        ? `Spieler: ${data.players?.online ?? 0} / ${data.players?.max ?? '?'}${data.version ? ' · ' + data.version : ''}`
-        : 'Spieler: —';
+        $("playersOnline").textContent =
+          data.players?.online ?? "–";
 
-      $('checkedAt').textContent =
-        'Zuletzt geprüft: ' +
-        new Date().toLocaleTimeString('de-DE');
+        $("playersMax").textContent =
+          data.players?.max ?? "–";
 
-    } catch {
-      $('statusDot').className = 'dot';
-      $('statusText').textContent =
-        'Status momentan nicht abrufbar';
+        $("serverVersion").textContent =
+          data.version ?? "Unbekannt";
+      }
 
-      $('players').textContent =
-        'Bitte später erneut versuchen.';
+      $("lastCheck").textContent =
+        new Date().toLocaleTimeString("de-DE");
+
+    } catch (error) {
+      setStatus(
+        "unknown",
+        "Status nicht abrufbar",
+        "Der Statusdienst ist momentan nicht erreichbar. Der Serverstatus ist deshalb unbekannt."
+      );
+
+      $("playersOnline").textContent = "–";
+      $("playersMax").textContent = "–";
+      $("serverVersion").textContent = "–";
+
+      $("lastCheck").textContent =
+        new Date().toLocaleTimeString("de-DE");
+    } finally {
+      checking = false;
     }
   }
+
+  async function copyAddress() {
+    const address = SERVER.host + ":" + SERVER.port;
+
+    try {
+      await navigator.clipboard.writeText(address);
+      $("serverAddress").textContent = "Kopiert!";
+      setTimeout(() => {
+        $("serverAddress").textContent = address;
+      }, 1500);
+    } catch {
+      $("serverAddress").textContent = address;
+    }
+  }
+
+  $("serverAddress").textContent =
+    SERVER.host + ":" + SERVER.port;
 
   checkStatus();
-  setInterval(checkStatus, 60000);
-
-  function renderRatings() {
-    const r = getSaved(
-      'mcSiteRatings',
-      {likes:0, dislikes:0, mine:''}
-    );
-
-    $('likes').textContent = r.likes;
-    $('dislikes').textContent = r.dislikes;
-
-    $('likeBtn').classList.toggle(
-      'selected', r.mine === 'like'
-    );
-
-    $('dislikeBtn').classList.toggle(
-      'selected', r.mine === 'dislike'
-    );
-  }
-
-  function vote(kind) {
-    const r = getSaved(
-      'mcSiteRatings',
-      {likes:0, dislikes:0, mine:''}
-    );
-
-    if (r.mine === kind) return;
-
-    if (r.mine === 'like') {
-      r.likes = Math.max(0, r.likes - 1);
-    }
-
-    if (r.mine === 'dislike') {
-      r.dislikes = Math.max(0, r.dislikes - 1);
-    }
-
-    r[kind === 'like' ? 'likes' : 'dislikes']++;
-    r.mine = kind;
-
-    setSaved('mcSiteRatings', r);
-    renderRatings();
-  }
-
-  $('likeBtn').addEventListener('click', () => vote('like'));
-  $('dislikeBtn').addEventListener('click', () => vote('dislike'));
-
-  renderRatings();
-
-  // Einfacher Komfort-Login.
-  // Kein sicherer Zugriffsschutz: Passwort und Logik sind im Quellcode sichtbar.
-
-  $('loginBtn').addEventListener('click', () => {
-    if (
-      $('adminPassword').value ===
-      (current.adminPassword || 'minecraft123')
-    ) {
-      $('adminLogin').classList.add('hidden');
-      $('adminEditor').classList.remove('hidden');
-
-      $('editTitle').value = current.title || '';
-      $('editTagline').value = current.tagline || '';
-      $('editIp').value = current.ip || '';
-      $('editPort').value = current.port || '25565';
-      $('editDescription').value = current.description || '';
-
-    } else {
-      $('loginMessage').textContent = 'Passwort ist falsch.';
-    }
-  });
-
-  $('saveBtn').addEventListener('click', () => {
-    current = {
-      ...current,
-      title: $('editTitle').value,
-      tagline: $('editTagline').value,
-      ip: $('editIp').value,
-      port: $('editPort').value,
-      description: $('editDescription').value
-    };
-
-    setSaved('mcSiteSettings', current);
-
-    render();
-    checkStatus();
-
-    alert('Gespeichert – nur in diesem Browser.');
-  });
-
-})();
+  setInterval(checkStatus, SERVER.refreshInterval);
 </script>
 
 </body>
