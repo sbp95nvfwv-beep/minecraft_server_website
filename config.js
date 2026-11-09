@@ -1,22 +1,12 @@
-
 window.SERVER_CONFIG = {
   title: "Mein Minecraft-Server",
-  tagline: "Willkommen auf unserem Server! Schau vorbei und spiel mit.",
-
-  // JAVA EDITION
-  javaIP: "DEINE-JAVA-SERVER-IP",
-  javaPort: "25565",
-
-  // BEDROCK EDITION
-  bedrockIP: "DEINE-BEDROCK-SERVER-IP",
-  bedrockPort: "19132",
-
-  // Kompatibilität mit der bisherigen Website
-  ip: "DEINE-JAVA-SERVER-IP",
-  port: "25565",
-
+  tagline: "Willkommen auf unserem Server!",
+  javaIP: "tayronstadt.aternos.me",
+  javaPort: "62855",
+  bedrockIP: "tayronstadt.aternos.me",
+  bedrockPort: "62855",
+  ip: "tayronstadt.aternos.me",
+  port: "62855",
   description: "Eine Stadt mit eigenen Grundstücken und Bauwerken.",
-
-  // Nur für eine einfache lokale Demo verwenden!
   adminPassword: ""
 };
